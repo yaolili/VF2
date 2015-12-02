@@ -15,25 +15,26 @@ class Vf:
     __sub = None
      
     #return candidate pairs for current state 
-    def candidate(subGraphNeighbor, graphNeighbor):
-        if not (subGraphNeighbor and graphNeighbor):
-            print "candidate() arguments error! subGraphNeighbor or graphNeighbor is empty!"
+    def candidate(self, subNeighbor, gNeighbor):
+        if not (subNeighbor and gNeighbor):
+            print "Class Vf candidate() arguments error! subNeighbor or gNeighbor is empty!"
             exit()
+        if not isinstance(subNeighbor, list) and isinstance(gNeighbor, list):
+            print "Class Vf candidate() arguments type error! type list expected!"
+            exit()
+        if not all(isinstance(x, int) for x in subNeighbor):
+            print "Class Vf candidate() arguments type error! int in subNeighbor list expected!"
+        if not all(isinstance(x, int) for x in gNeighbor):
+            print "Class Vf candidate() arguments type error! int in gNeighbor list expected!"        
         
-        '''
-        print "in candidate(), subGraphNeighbor: ", subGraphNeighbor
-        print "in candidate(), subGraphNeighbor len: ", len(subGraphNeighbor)
-        print "in candidate(), graphNeighbor: ", graphNeighbor
-        '''
-        
-        candidatePairs = []
-        for i in range(0, len(subGraphNeighbor)):
-            for j in range(0, len(graphNeighbor)):
-                candidateString = str(subGraphNeighbor[i]) + ":" + str(graphNeighbor[j])
-                candidatePairs.append(candidateString)
-        return candidatePairs
+        pairs = []
+        for i in range(len(subNeighbor)):
+            for j in range(len(gNeighbor)):
+                string = str(subNeighbor[i]) + ":" + str(gNeighbor[j])
+                pairs.append(string)
+        return pairs
 
-    def preSucc(n, VES, result):
+    def preSucc(self, n, result):
         aList = VES[n]
         for i in range(len(aList)):
             v1, v2 = aList[i].strip().split(":")
@@ -48,7 +49,7 @@ class Vf:
                 print ""
 
     #meet feasibility rules or not, return true or false
-    def isMeetRules(n, m, result, graphVertexSet, graphEdgeSet, subGraphVertexSet, subGraphEdgeSet):
+    def isMeetRules(self, n, m, result):
         #label match failure 
         if(subGraphVertexSet[n] != graphVertexSet[m]):
             return False
@@ -77,68 +78,66 @@ class Vf:
 
         
     #main entrance, return match data structures 
-    def dfsMatch(i, j, result):    
+    def dfsMatch(self, i, j, result):    
         
         curMap = Map(result)
-        if curMap.isCovered(global sub.vertexSet[i]):
+        if curMap.isCovered(self.__sub.curVSet(i)):
             return result
         
-        subNeighbor = curMap.neighbor(i, global sub, 0)
-        gNeighbor = curMap.neighbor(j, global origin, 1)   
+        subNeighbor = curMap.neighbor(i, self.__sub, 0)
+        gNeighbor = curMap.neighbor(j, self.__origin, 1)   
        
         #mapSubGraph doesn't corver subGraphVertexSet, so subGraphNeighbor and graphNeighbor can't be empty 
         if not (subNeighbor and gNeighbor):
-            print "in dfsMatch(), subNeighbor or gNeighbor is empty!"
+            print "Class Vf dfsMatch(), subNeighbor or gNeighbor is empty!"
             exit()
         
         #notice, choose one vertex in subGraphNeighbor is ok
         while(len(subNeighbor) > 1):
+            print "Class Vf dfsMatch() subNeighbor: ", subNeighbor
             subNeighbor.pop()
 
         #test usage!
-        print "in dfsMatch() curMap: ", curMap
-        print "in dfsMatch() subNeighbor: ", subNeighbor
-        print "in dfsMatch() gNeighbor: ", gNeighbor
-        print "in dfsMatch() result: ", result
+        print "Class Vf dfsMatch() curMap.subMap(): ", curMap.subMap()
+        print "Class Vf dfsMatch() curMap.gMap(): ", curMap.gMap()
+        print "Class Vf dfsMatch() subNeighbor: ", subNeighbor
+        print "Class Vf dfsMatch() gNeighbor: ", gNeighbor
+        print "Class Vf dfsMatch() result: ", result
 
-        candidatePairs = candidate(subGraphNeighbor, graphNeighbor)
-        print "in dfsMatch() candidatePairs: ", candidatePairs
-        if not candidatePairs:
+        pairs = self.candidate(subNeighbor, gNeighbor)
+        print "Class Vf dfsMatch() pairs: ", pairs
+        if not pairs:
             return result
-                    
-        for key in candidatePairs:
+                
+        for key in pairs:
             v1, v2 = key.strip().split(":")
             #remain to fix
             if(isMeetRules(v1, v2, result, graphVertexSet, graphEdgeSet, subGraphVertexSet, subGraphEdgeSet)):
                 
                 result[v1] = v2
-                print "result aaa: ", result
+                
                 dfsMatch(currentSubGraph, currentGraph, result)       
-                exit()
+                
                 result.pop(key)
-        
         return result
         
-    def main(f1, f2):
+    def main(self, f1, f2, f3):
 
-        global origin = GraphSet(f1)
-        global sub = GraphSet(f2)
-        for i in range(len(sub.graphSet)):     
-            for j in range(len(origin.graphSet)):
+        self.__origin = GraphSet(f1)
+        self.__sub = GraphSet(f2)
+        
+        out = file(f3, "w+")
+        subLen = len(self.__sub.graphSet())
+        gLen = len(self.__origin.graphSet())
+        
+        for i in range(subLen):          
+            for j in range(gLen):
                 result = {}        
-                result = dfsMatch(i, j, result)
-                
-                '''
-                #remain to fix
-                if len(result) == len(currentSubGraph):
-                    print "Match! %s %d-th graph isomorphism %s %d-th graph! " %(f2, i, f1, j)
-                    print result
-                    exit()
-                else:
-                    print "No match!"
-                    exit()
-                '''    
-
+                result = self.dfsMatch(i, j, result)                                               
+                if len(result) == len(self.__sub.curVSet(i)):
+                    out.write("Match! " + f2 + " " + str(i) + "-th graph isomorphism " + f1 + " " + str(j) + "-th graph!\n")
+                    out.write(str(result) + "\n\n")   
+        out.close()
         
     
     

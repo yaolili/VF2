@@ -52,11 +52,7 @@ class GraphSet:
             exit()
             
     
-    def curGraph(self, offset):
-        if offset >= len(self.__graphSet):
-            print "Class GraphSet curGraph() offset out of index!"
-            exit()
-        
+    def graphSet(self):        
         return self.__graphSet
     
     def curVSet(self, offset):

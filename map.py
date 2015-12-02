@@ -50,9 +50,11 @@ class Map:
             curMap = self.__gMap
         else:
             curMap = self.__subMap
-            
+        
+        #print "curMap: ", curMap
         for index in curMap:
             aList = VESet[index]
+            #print "aList: ", aList
             for i in range(len(aList)):
                 v1, v2 = aList[i].strip.split(":")
                 if int(v1) != index:
@@ -65,10 +67,9 @@ class Map:
                     print "Class Map subNeighbor() VESet error!"
                     exit()
         if not neighbor:
-            for index in graph.curVESet(offset):
+            for index in graph.curVSet(offset):
                 if index not in curMap:
-                    neighbor.append(index)
-                
+                    neighbor.append(int(index))               
         return neighbor
     
     
