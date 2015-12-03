@@ -17,7 +17,7 @@ class Vf:
     #return candidate pairs for current state 
     def candidate(self, subNeighbor, gNeighbor):
         if not (subNeighbor and gNeighbor):
-            print "Class Vf candidate() arguments error! subNeighbor or gNeighbor is empty!"
+            print "Class Vf candidate() arguments value error! subNeighbor or gNeighbor is empty!"
             exit()
         if not isinstance(subNeighbor, list) and isinstance(gNeighbor, list):
             print "Class Vf candidate() arguments type error! type list expected!"
@@ -34,22 +34,35 @@ class Vf:
                 pairs.append(string)
         return pairs
 
-    def preSucc(self, n, result):
-        aList = VES[n]
-        for i in range(len(aList)):
-            v1, v2 = aList[i].strip().split(":")
-            if v1 != index:
-                if v1 not in result.keys():
-                    print "yes"
-            elif v2 != index:
-                
-                if v2 not in (neighborVertexSet and mapGraph):
-                    print "yes"
-            else:
-                print ""
+    #type = 0, pre; type = 1, succ    
+    def preSucc(self, vertexNeighbor, map, type):
+        #vertexNeighbor can be empty
+        if not map:
+            print "Class Vf preSucc() arguments value error! map is empty!"
+            exit()
+        if not (isinstance(vertexNeighbor, list) and isinstance(map, list)):
+            print "Class Vf preSucc() arguments type error! vertexNeighbor and map expected list!"
+            exit()
+        if not (type == 0 or type == 1):
+            print "Class Vf preSucc() arguments value error! type expected 0 or 1!"
+           
+        result = []
+        #succ
+        if type:
+            for vertex in vertexNeighbor:
+                if vertex not in map:                   
+                    result.append(vertex)
+        #pre
+        else:
+            for vertex in vertexNeighbor:
+                if vertex in map:
+                    result.append(vertex)
+        return result
 
     #meet feasibility rules or not, return true or false
-    def isMeetRules(self, n, m, result):
+    def isMeetRules(self, pairIndex, result):
+        #remain to check arguments
+        
         #label match failure 
         if(subGraphVertexSet[n] != graphVertexSet[m]):
             return False
@@ -79,7 +92,7 @@ class Vf:
         
     #main entrance, return match data structures 
     def dfsMatch(self, i, j, result):    
-        
+        #remain to check arguments
         curMap = Map(result)
         if curMap.isCovered(self.__sub.curVSet(i)):
             return result
@@ -122,7 +135,7 @@ class Vf:
         return result
         
     def main(self, f1, f2, f3):
-
+        #remain to check arguments
         self.__origin = GraphSet(f1)
         self.__sub = GraphSet(f2)
         
