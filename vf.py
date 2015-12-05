@@ -96,7 +96,7 @@ class Vf:
         
 
         if subVSet[v1] != gVSet[v2]:
-            print "vertex label different!"
+            #print "vertex label different!"
             return False
             
         #notice, when result is empty, first pair should be added when their vertexLabels are the same!
@@ -124,48 +124,48 @@ class Vf:
 
         #3 rule
         if(len(v1Pre) > len(v2Pre)):
-            print "len(v1Pre) > len(v2Pre)!"
+            #print "len(v1Pre) > len(v2Pre)!"
             return False
                 
         for pre in v1Pre:
             if result[pre] not in v2Pre:
-                print "v1Pre not in v2Pre!"
+                #print "v1Pre not in v2Pre!"
                 return False
             if self.edgeLabel(i, v1, pre, 0) != self.edgeLabel(j, v2, result[pre], 1):
-                print "eLabel of v1-pre different with eLabel of v2-result[pre]!"
+                #print "eLabel of v1-pre different with eLabel of v2-result[pre]!"
                 return False
            
         #4 rule   
         if(len(v1Succ) > len(v2Succ)):
-            print "len(v1Succ) > len(v2Succ)!"
+            #print "len(v1Succ) > len(v2Succ)!"
             return False
                 
         for succ in v1Succ:
             vertex = self.__sub.curVSet(i)[succ]
             edge = self.edgeLabel(i, v1, succ, 0)
             if not self.isMatchInV2Succ(j, vertex, edge, v2, v2Succ):
-                print "not self.isMatchInV2Succ()"
+                #print "not self.isMatchInV2Succ()"
                 return False
                
         #5,6 rules
         len1 = len(set(v1Neighbor) & set(subMNeighbor))
         len2 = len(set(v2Neighbor) & set(gMNeighbor))
         if len1 > len2:
-            print "5,6 rules mismatch!"
+            #print "5,6 rules mismatch!"
             return False
             
         #7 rule     
         len1= len(set(self.__sub.curVSet(i).keys()) - set(subMNeighbor) - set(v1Pre))
         len2 = len(set(self.__origin.curVSet(j).keys()) - set(gMNeighbor) - set(v2Pre))
         if len1 > len2:
-            print "7 rule mismatch!"
+            #print "7 rule mismatch!"
             return False
                
         return True
         
 
     def dfsMatch(self, i, j, result):   
-        print "in dfsMatch() result: ", result
+        #print "in dfsMatch() result: ", result
         if not isinstance(result, dict):
             print "Class Vf dfsMatch() arguments type error! result expected dict!"
         
@@ -229,11 +229,12 @@ class Vf:
                 return result
         return result
         
-    def main(self, f1, f2, f3):        
+    def main(self, f1, f2):   
+        '''
         output = sys.stdout
         outputfile=open(f3,'w+')
         sys.stdout=outputfile
-        
+        '''
         self.__origin = GraphSet(f1)
         self.__sub = GraphSet(f2)
         
@@ -261,8 +262,8 @@ class Vf:
                     print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" 
                     
                 
-        outputfile.close()
-        sys.stdout = output
+        #outputfile.close()
+        #sys.stdout = output
 
         
     

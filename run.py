@@ -6,6 +6,7 @@
 
 import os
 import sys
+import time
 from vf import Vf
 
 if __name__ == '__main__':
@@ -15,6 +16,13 @@ if __name__ == '__main__':
         print "sys.argv[3]: output file"
         exit()
     
-    vf2 = Vf()
+    start = time.clock()    
+    output = open(sys.argv[3], 'w+')
+    sys.stdout = output
     
-    vf2.main(sys.argv[1], sys.argv[2], sys.argv[3])   
+    vf2 = Vf()   
+    vf2.main(sys.argv[1], sys.argv[2])   
+    
+    end = time.clock()
+    print "process: %f min" % (end - start)/60
+    output.close()
