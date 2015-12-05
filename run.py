@@ -24,5 +24,5 @@ if __name__ == '__main__':
     vf2.main(sys.argv[1], sys.argv[2])   
     
     end = time.clock()
-    print "process: %f min" % (end - start)/60
+    print "time: ", (end - start)/60
     output.close()

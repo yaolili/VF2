@@ -122,7 +122,7 @@ class Vf:
         print "in isMeetRules() v2Succ: ", v2Succ
         '''
 
-        #3 rule
+        #3,4 rule
         if(len(v1Pre) > len(v2Pre)):
             #print "len(v1Pre) > len(v2Pre)!"
             return False
@@ -135,7 +135,7 @@ class Vf:
                 #print "eLabel of v1-pre different with eLabel of v2-result[pre]!"
                 return False
            
-        #4 rule   
+        '''   
         if(len(v1Succ) > len(v2Succ)):
             #print "len(v1Succ) > len(v2Succ)!"
             return False
@@ -146,7 +146,8 @@ class Vf:
             if not self.isMatchInV2Succ(j, vertex, edge, v2, v2Succ):
                 #print "not self.isMatchInV2Succ()"
                 return False
-               
+        '''
+        
         #5,6 rules
         len1 = len(set(v1Neighbor) & set(subMNeighbor))
         len2 = len(set(v2Neighbor) & set(gMNeighbor))
@@ -155,12 +156,12 @@ class Vf:
             return False
             
         #7 rule     
-        len1= len(set(self.__sub.curVSet(i).keys()) - set(subMNeighbor) - set(v1Pre))
-        len2 = len(set(self.__origin.curVSet(j).keys()) - set(gMNeighbor) - set(v2Pre))
+        len1= len(set(self.__sub.curVSet(i).keys()) - set(subMNeighbor) - set(v1Succ))
+        len2 = len(set(self.__origin.curVSet(j).keys()) - set(gMNeighbor) - set(v2Succ))
         if len1 > len2:
             #print "7 rule mismatch!"
-            return False
-               
+            return False        
+            
         return True
         
 
@@ -260,8 +261,6 @@ class Vf:
                     print "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" 
                     
                 
-        #outputfile.close()
-        #sys.stdout = output
 
         
     
