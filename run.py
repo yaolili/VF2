@@ -1,7 +1,7 @@
 #-*- coding:utf-8 -*-
 # AUTHOR:   yaolili
 # FILE:     run.py
-# ROLE:     TODO (some explanation)
+# ROLE:     run vf.py
 # CREATED:  2015-12-2 21:34:15
 
 import os

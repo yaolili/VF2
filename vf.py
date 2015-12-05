@@ -1,9 +1,9 @@
 #-*- coding:utf-8 -*-
 # AUTHOR:   yaolili
 # FILE:     vf.py
-# ROLE:     TODO (some explanation)
+# ROLE:     vf2 algorithm
 # CREATED:  2015-11-28 20:55:11
-# MODIFIED: 2015-12-04 16:47:09
+# MODIFIED: 2015-12-05 11:58:12
 
 import sys
 import os
