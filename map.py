@@ -30,8 +30,6 @@ class Map:
     
     #notice, here is subVertexSet
     def isCovered(self, vertexSet):
-        print "Class Map isCovered() len(self.__subMap): ", len(self.__subMap)
-        print "Class Map isCovered() len(vertexSet): ", len(vertexSet)
         if len(self.__subMap) == len(vertexSet):
             return True
         else:

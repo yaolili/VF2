@@ -11,10 +11,10 @@ from graph import GraphSet
 from map import Map
 
 class Vf:
+
     __origin = None
     __sub = None
      
-    #return candidate pairs for current state 
     def candidate(self, subMNeighbor, gMNeighbor):
         if not (subMNeighbor and gMNeighbor):
             print "Class Vf candidate() arguments value error! subMNeighbor or gMNeighbor is empty!"
@@ -66,11 +66,6 @@ class Vf:
             ESet = self.__origin.curESet(offset)
         else:
             ESet = self.__sub.curESet(offset)       
-        '''
-        print "in edgeLabel() index1: ", index1
-        print "in edgeLabel() index2: ", index2
-        print "in edgeLabel() key: ", key
-        '''
         return ESet[key] 
     
     def isMatchInV2Succ(self, j, vertex, edge, v2, v2Succ):
@@ -81,9 +76,11 @@ class Vf:
                 return True
         return False
         
-    #meet feasibility rules or not, return true or false
+
     def isMeetRules(self, v1, v2, i, j, result, subMap, gMap, subMNeighbor, gMNeighbor):
-        #remain to check arguments
+        
+        '''
+        #test usage!
         print "-------------------------------------------"
         print "in isMeetRules() v1: %d, v2: %d" %(v1, v2)
         print "in isMeetRules() result: ", result
@@ -91,17 +88,12 @@ class Vf:
         print "in isMeetRules() gMap: ", gMap
         print "in isMeetRules() subMNeighbor: ", subMNeighbor
         print "in isMeetRules() gMNeighbor: ", gMNeighbor
-         
+        '''
+        
         #compare label of v1 and v2
         subVSet = self.__sub.curVSet(i)
         gVSet = self.__origin.curVSet(j)
         
-        '''
-        #test usage!
-        print "in isMeetRules() subVSet: ", subVSet
-        print "in isMeetRules() gVSet: ", gVSet
-        print "in isMeetRules() v1: %d v2:%d " %(v1, v2)
-        '''
 
         if subVSet[v1] != gVSet[v2]:
             print "vertex label different!"
@@ -114,50 +106,40 @@ class Vf:
         
         v1Neighbor = self.__sub.neighbor(i, v1)
         v2Neighbor = self.__origin.neighbor(j, v2)
-        
-        '''
-        #test usage!
-        print "in isMeetRules() v1Neighbor: ", v1Neighbor
-        print "in isMeetRules() v2Neighbor: ", v2Neighbor
-        '''
-
+                
         v1Pre = self.preSucc(v1Neighbor, subMap, 0)
         v1Succ = self.preSucc(v1Neighbor, subMap, 1)
         v2Pre = self.preSucc(v2Neighbor, gMap, 0)
         v2Succ = self.preSucc(v2Neighbor, gMap, 1)
-        
 
-        
-        #test usage! 
+        '''
+        #test usage!
+        print "in isMeetRules() v1Neighbor: ", v1Neighbor
+        print "in isMeetRules() v2Neighbor: ", v2Neighbor        
         print "in isMeetRules() v1Pre: ", v1Pre
         print "in isMeetRules() v2Pre: ", v2Pre
         print "in isMeetRules() v1Succ: ", v1Succ
         print "in isMeetRules() v2Succ: ", v2Succ
-        
+        '''
 
         #3 rule
-        #前驱长度问题
         if(len(v1Pre) > len(v2Pre)):
-            print "length v1Pre bigger than v2Pre!"
+            print "len(v1Pre) > len(v2Pre)!"
             return False
                 
         for pre in v1Pre:
-            #v1前驱不在v2前驱中
             if result[pre] not in v2Pre:
                 print "v1Pre not in v2Pre!"
                 return False
-            #判断v1-pre与v2-result[pre]连边标志是否一样
             if self.edgeLabel(i, v1, pre, 0) != self.edgeLabel(j, v2, result[pre], 1):
-                print "v1-pre different with v2-result[pre]!"
+                print "eLabel of v1-pre different with eLabel of v2-result[pre]!"
                 return False
            
         #4 rule   
-        #v1后继数量多于v2后继数量
         if(len(v1Succ) > len(v2Succ)):
             print "len(v1Succ) > len(v2Succ)!"
             return False
-        
-        
+                
         for succ in v1Succ:
             vertex = self.__sub.curVSet(i)[succ]
             edge = self.edgeLabel(i, v1, succ, 0)
@@ -165,18 +147,14 @@ class Vf:
                 print "not self.isMatchInV2Succ()"
                 return False
                
-
-        #5,6 rules, 该点邻居与map邻居的交集
+        #5,6 rules
         len1 = len(set(v1Neighbor) & set(subMNeighbor))
         len2 = len(set(v2Neighbor) & set(gMNeighbor))
         if len1 > len2:
             print "5,6 rules mismatch!"
             return False
             
-        #7 rule, 该点邻居与map邻居的差集
-        print "in isMeetRules() v1Neighbor: ", v1Neighbor
-        print "in isMeetRules() v2Neighbor: ", v2Neighbor
-        
+        #7 rule     
         len1= len(set(self.__sub.curVSet(i).keys()) - set(subMNeighbor) - set(v1Pre))
         len2 = len(set(self.__origin.curVSet(j).keys()) - set(gMNeighbor) - set(v2Pre))
         if len1 > len2:
@@ -185,17 +163,22 @@ class Vf:
                
         return True
         
-    #main entrance, return match data structures 
+
     def dfsMatch(self, i, j, result):   
         print "in dfsMatch() result: ", result
         if not isinstance(result, dict):
             print "Class Vf dfsMatch() arguments type error! result expected dict!"
         
         curMap = Map(result)
+        
+        '''
+        #test usage!
         print "in dfsMatch() curMap.subMap() : ", curMap.subMap()
         print "in dfsMatch() curMap.subMap() length: ", len(curMap.subMap())
         print "in dfsMatch() self.__sub.curVSet(i) : ", self.__sub.curVSet(i)
         print "in dfsMatch() self.__sub.curVSet(i) length: ", len(self.__sub.curVSet(i))
+        '''
+                
         if curMap.isCovered(self.__sub.curVSet(i)):
             print "yes!"
             return result
@@ -210,8 +193,8 @@ class Vf:
         
         subNMNeighbor = curMap.neighbor(i, self.__sub, 0, False)
         gNMNeighbor = curMap.neighbor(j, self.__origin, 1, False)
-        print "in dfsMatch() subNMNeighbor: ", subNMNeighbor
-        print "in dfsMatch() gNMNeighbor: ", gNMNeighbor
+        #print "in dfsMatch() subNMNeighbor: ", subNMNeighbor
+        #print "in dfsMatch() gNMNeighbor: ", gNMNeighbor
         
         #notice, choose one vertex in subGraphNeighbor is ok
         while(len(subNMNeighbor) > 1):
@@ -236,25 +219,17 @@ class Vf:
             v1, v2 = pair.strip().split(":")
             if(self.isMeetRules(int(v1), int(v2), i, j, result, curMap.subMap(), curMap.gMap(), subMNeighbor, gMNeighbor)):
                 result[int(v1)] = int(v2)       
-                self.dfsMatch(i, j, result) 
-                #print "in dfsMatch() result without pop: ", result
-                #print "in dfsMatch() curMap.subMap() without pop: ", curMap.subMap()
-                #print "in dfsMatch() curMap.gMap() without pop: ", curMap.gMap()
+                self.dfsMatch(i, j, result)                 
+                #notice, it's important to return result when len(result) == len(self.__sub.curVSet(i))
+                #otherwise it will continue to pop
                 if len(result) == len(self.__sub.curVSet(i)):
                     return result
-                result.pop(int(v1))
-                #print "in dfsMatch() result with pop: ", result
-                #print "in dfsMatch() curMap.subMap() with pop: ", curMap.subMap()
-                #print "in dfsMatch() curMap.gMap() with pop: ", curMap.gMap()
-                
-
+                result.pop(int(v1))                
             else:
                 return result
         return result
         
-    def main(self, f1, f2, f3):
-    
-    
+    def main(self, f1, f2, f3):        
         output = sys.stdout
         outputfile=open(f3,'w+')
         sys.stdout=outputfile
