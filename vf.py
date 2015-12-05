@@ -225,8 +225,6 @@ class Vf:
                 if len(result) == len(self.__sub.curVSet(i)):
                     return result
                 result.pop(int(v1))                
-            else:
-                return result
         return result
         
     def main(self, f1, f2):   
